@@ -1,37 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel='stylesheet' type='text/css' href='./src/css/example-smart-app.css'>
-    <!--
-      Temporarily disable cerner-smart-embeddable-lib
-      <link rel='stylesheet' type='text/css' href='./lib/css/cerner-smart-embeddable-lib-1.0.0.min.css'>
-    -->
-    <title>Example-SMART-App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMART on FHIR Launch</title>
+    <link rel="stylesheet" type="text/css" href="./src/css/example-smart-app.css">
   </head>
   <body>
-    <!-- Required JS files to enable this page to embed within an MPage -->
-    <!--
-      Temporarily disable cerner-smart-embeddable-lib
-      <script src='https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js'></script>
-      <script src='./lib/js/cerner-smart-embeddable-lib-1.0.0.min.js'></script>
-    -->
-
-    <!-- FHIR Client JS Library -->
-    <script src='./lib/js/fhir-client-v0.1.12.js'></script>
-
-    <!-- Prevent session bleed caused by single threaded embedded browser and sessionStorage API -->
-    <!-- https://github.com/cerner/fhir-client-cerner-additions -->
-    <script src='./lib/js/fhir-client-cerner-additions-1.0.0.js'></script>
+    <script src="./lib/js/fhir-client-v0.1.12.js"></script>
+    <script src="./lib/js/fhir-client-cerner-additions-1.0.0.js"></script>
     <script>
-        console.log("SMART Launch initialized...");
+      console.log("✅ SMART Launch page initialized.");
+
+      // Helper to parse query parameters
+      function getUrlParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+      }
+
+      const iss = getUrlParam("iss");
+      const launch = getUrlParam("launch");
+
+      if (!iss) {
+        console.error("❌ Missing 'iss' parameter in URL. SMART launch cannot proceed.");
+        document.body.innerHTML = "<h3>❌ Missing iss parameter in URL.</h3>";
+      } else {
+        console.log("✅ Found iss:", iss);
+        console.log("✅ Found launch:", launch);
+
         FHIR.oauth2.authorize({
-          'client_id': '691a0353-e22a-4a15-8cac-cfc5bed7e9c0',
-          'scope': 'launch patient/Patient.read patient/Observation.read openid fhirUser profile',
-          'redirectUri': 'https://lenkun25369-ui.github.io/smart-on-fhir-tutorial/example-smart-app/index.html',
-          'useSessionStorage': true 
+          client_id: "691a0353-e22a-4a15-8cac-cfc5bed7e9c0",
+          scope: "launch patient/Patient.read patient/Observation.read openid fhirUser profile",
+          redirectUri: "https://lenkun25369-ui.github.io/smart-on-fhir-tutorial/example-smart-app/index.html",
+          iss: iss,         // ✅ Explicitly pass FHIR server URL
+          launch: launch,   // ✅ Explicitly pass launch context
+          useSessionStorage: true
         });
+      }
     </script>
     <div class="spinner">
       <div class="bounce1"></div>
