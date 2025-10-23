@@ -1,4 +1,10 @@
 (function(window){
+    FHIR.oauth2.settings = {
+    clientId: '691a0353-e22a-4a15-8cac-cfc5bed7e9c0',
+    scope: 'launch patient/Patient.read patient/Observation.read openid fhirUser profile',
+    redirectUri: 'https://lenkun25369-ui.github.io/smart-on-fhir-tutorial/example-smart-app/index.html',
+    useSessionStorage: true
+  };
   window.extractData = function() {
     var ret = $.Deferred();
 
